@@ -40,8 +40,7 @@ fn setup(
                 top: Val::Percent(50.0),
                 ..default() 
             }),
-            TextField::Time,
-        ));
+        )).insert(TextField::Time);
 
 
     // Generate Text field for Date
@@ -53,64 +52,58 @@ fn setup(
                 bottom: Val::Percent(5.0),
                 ..default()
             }),
-            TextField::Date
-        ));
+        )).insert(TextField::Date);
 
         // Generate Text field for Hour
     commands.spawn((TextBundle::from_section("HO", TextStyle { 
-        font: default() , font_size: 14.0, color: Color::WHITE })
+        font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(77.5),
                 bottom: Val::Percent(78.5),
                 ..default()
             }),
-            TextField::Hour
-        ));
+        )).insert(TextField::Hour);
 
     // Generate Text field for Minute
     commands.spawn((TextBundle::from_section("MN", TextStyle { 
-        font: default() , font_size: 14.0, color: Color::WHITE })
+        font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(21.5),
                 bottom: Val::Percent(78.5),
                 ..default()
             }),
-            TextField::Minute,
-        ));
+        )).insert(TextField::Minute);
 
     // Generate Text field for Date
     commands.spawn((TextBundle::from_section("SC", TextStyle { 
-        font: default() , font_size: 14.0, color: Color::WHITE })
+        font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(77.5),
                 bottom: Val::Percent(21.5),
                 ..default()
             }),
-            TextField::Second,
-        ));
+        )).insert(TextField::Second);
 
     // Generate Text field for Date
     commands.spawn((TextBundle::from_section("PM", TextStyle { 
-        font: default() , font_size: 14.0, color: Color::WHITE })
+        font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(21.5),
                 bottom: Val::Percent(21.5),
                 ..default()
             }),
-            TextField::TwelveHour,
-        ));
+        )).insert(TextField::TwelveHour);
 
 }
 
 // Passes in the gizmos, queries text, and queries window size
 fn clock_face(
     mut gizmos: Gizmos,
-    mut time: Query<&mut Text>,
-    mut field: Query<&mut TextField>,
+    mut time: Query<(&mut Text, &TextField)>,
     mut window: Query<&mut Window>,
 ) {
     // Get time and setup time
@@ -148,6 +141,30 @@ fn clock_face(
     gizmos.arc_2d(Vec2::new(bottom_left_x,bottom_left_y), second_angle / 2.0, second_angle, 60., Color::VIOLET).segments(360*3);
     gizmos.arc_2d(Vec2::new(bottom_right_x,bottom_right_y), second_angle / 2.0, second_angle, 60., Color::CYAN).segments(360*3);
 
-
-    
+    for (mut text, text_field) in time.iter_mut() {
+        match text_field {
+            TextField::Hour => {
+                text.sections[0].value = format!("{hour}");
+            },
+            TextField::Minute => {
+                text.sections[0].value = format!("{minute}");
+            },
+            TextField::Second => {
+                text.sections[0].value = format!("{second}");
+            },
+            TextField::TwelveHour => {
+                if hour < 12.0 {
+                    text.sections[0].value = format!("AM");
+                } else {
+                    text.sections[0].value = format!("PM");
+                }
+            },
+            TextField::Time => {
+                text.sections[0].value = format!("{disp_time}");
+            },
+            TextField::Date => {
+                text.sections[0].value = format!("{disp_date}");
+            },
+        }
+    }
 }
