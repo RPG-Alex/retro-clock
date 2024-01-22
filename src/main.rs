@@ -12,6 +12,15 @@ fn main() {
 }
 
 
+#[derive(Component, PartialEq)]
+enum TextField {
+    Time,
+    Date,
+    Hour,
+    Minute,
+    Second,
+    TwelveHour,
+}
 
 fn setup(
     mut commands: Commands,
@@ -21,8 +30,9 @@ fn setup(
 
     // set the line thickness
     gizmo_conf.line_width = 10.0;
+    gizmo_conf.line_perspective = false;
     // Generate Text field for Time
-    commands.spawn((TextBundle::from_section("PLACEHOLDER", TextStyle { 
+    commands.spawn((TextBundle::from_section("TIME", TextStyle { 
         font: default() , font_size: 14.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
@@ -30,11 +40,12 @@ fn setup(
                 top: Val::Percent(50.0),
                 ..default() 
             }),
+            TextField::Time,
         ));
 
 
     // Generate Text field for Date
-    commands.spawn((TextBundle::from_section("PLACEHOLDER", TextStyle { 
+    commands.spawn((TextBundle::from_section("DATE", TextStyle { 
         font: default() , font_size: 14.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
@@ -42,13 +53,64 @@ fn setup(
                 bottom: Val::Percent(5.0),
                 ..default()
             }),
+            TextField::Date
         ));
+
+        // Generate Text field for Hour
+    commands.spawn((TextBundle::from_section("HO", TextStyle { 
+        font: default() , font_size: 14.0, color: Color::WHITE })
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                right: Val::Percent(77.5),
+                bottom: Val::Percent(78.5),
+                ..default()
+            }),
+            TextField::Hour
+        ));
+
+    // Generate Text field for Minute
+    commands.spawn((TextBundle::from_section("MN", TextStyle { 
+        font: default() , font_size: 14.0, color: Color::WHITE })
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                right: Val::Percent(21.5),
+                bottom: Val::Percent(78.5),
+                ..default()
+            }),
+            TextField::Minute,
+        ));
+
+    // Generate Text field for Date
+    commands.spawn((TextBundle::from_section("SC", TextStyle { 
+        font: default() , font_size: 14.0, color: Color::WHITE })
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                right: Val::Percent(77.5),
+                bottom: Val::Percent(21.5),
+                ..default()
+            }),
+            TextField::Second,
+        ));
+
+    // Generate Text field for Date
+    commands.spawn((TextBundle::from_section("PM", TextStyle { 
+        font: default() , font_size: 14.0, color: Color::WHITE })
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                right: Val::Percent(21.5),
+                bottom: Val::Percent(21.5),
+                ..default()
+            }),
+            TextField::TwelveHour,
+        ));
+
 }
 
 // Passes in the gizmos, queries text, and queries window size
 fn clock_face(
     mut gizmos: Gizmos,
     mut time: Query<&mut Text>,
+    mut field: Query<&mut TextField>,
     mut window: Query<&mut Window>,
 ) {
     // Get time and setup time
@@ -87,12 +149,5 @@ fn clock_face(
     gizmos.arc_2d(Vec2::new(bottom_right_x,bottom_right_y), second_angle / 2.0, second_angle, 60., Color::CYAN).segments(360*3);
 
 
-    for (i ,mut text) in &mut time.iter_mut().enumerate() {
-        if i == 0 {
-            text.sections[0].value = format!("{disp_time}");
-        }
-        if i == 1 {
-            text.sections[0].value = format!("{disp_date}");
-        }
-    }
+    
 }
