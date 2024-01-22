@@ -11,6 +11,8 @@ fn main() {
     .run()
 }
 
+
+
 fn setup(
     mut commands: Commands,
     mut gizmo_conf: ResMut<GizmoConfig>
@@ -19,23 +21,34 @@ fn setup(
 
     // set the line thickness
     gizmo_conf.line_width = 10.0;
-    // Generate Text field
-    commands.spawn(TextBundle::from_section("PLACEHOLDER", TextStyle { 
+    // Generate Text field for Time
+    commands.spawn((TextBundle::from_section("PLACEHOLDER", TextStyle { 
         font: default() , font_size: 14.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(47.5),
                 top: Val::Percent(50.0),
-                ..default()
-            }))
-            ;
+                ..default() 
+            }),
+        ));
 
+
+    // Generate Text field for Date
+    commands.spawn((TextBundle::from_section("PLACEHOLDER", TextStyle { 
+        font: default() , font_size: 14.0, color: Color::WHITE })
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                right: Val::Percent(45.0),
+                bottom: Val::Percent(5.0),
+                ..default()
+            }),
+        ));
 }
 
 // Passes in the gizmos, queries text, and queries window size
 fn clock_face(
     mut gizmos: Gizmos,
-    mut query: Query<&mut Text>,
+    mut time: Query<&mut Text>,
     mut window: Query<&mut Window>,
 ) {
     // Get time and setup time
@@ -43,7 +56,6 @@ fn clock_face(
     let hour =  now.hour() as f32;
     let minute = now.minute() as f32;
     let second = now.second() as f32;
-
     // Create our circle arc
     let hour_angle = ((360.0/ 24.0) * hour).to_radians();
     let minute_angle = ((360.0/60.0) * minute).to_radians();
@@ -51,7 +63,7 @@ fn clock_face(
 
     // Share time in readable manner
     let disp_time = now.time().format("%H:%M:%S");
-    //let disp_date = now.date_naive().format("%Y-%B-%d");
+    let disp_date = now.date_naive().format("%Y-%B-%d");
 
     // Get the display info for relative locations
     let sec_loc = window.single_mut();
@@ -74,8 +86,13 @@ fn clock_face(
     gizmos.arc_2d(Vec2::new(bottom_left_x,bottom_left_y), second_angle / 2.0, second_angle, 60., Color::VIOLET).segments(360*3);
     gizmos.arc_2d(Vec2::new(bottom_right_x,bottom_right_y), second_angle / 2.0, second_angle, 60., Color::CYAN).segments(360*3);
 
-    //output time to text field
-    for mut text in &mut query {
-        text.sections[0].value = format!("{disp_time}");
+
+    for (i ,mut text) in &mut time.iter_mut().enumerate() {
+        if i == 0 {
+            text.sections[0].value = format!("{disp_time}");
+        }
+        if i == 1 {
+            text.sections[0].value = format!("{disp_date}");
+        }
     }
 }
