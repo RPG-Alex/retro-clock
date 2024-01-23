@@ -33,10 +33,10 @@ fn setup(
     gizmo_conf.line_perspective = false;
     // Generate Text field for Time
     commands.spawn((TextBundle::from_section("TIME", TextStyle { 
-        font: default() , font_size: 14.0, color: Color::WHITE })
+        font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
-                right: Val::Percent(47.5),
+                right: Val::Percent(45.5),
                 top: Val::Percent(50.0),
                 ..default() 
             }),
@@ -45,10 +45,10 @@ fn setup(
 
     // Generate Text field for Date
     commands.spawn((TextBundle::from_section("DATE", TextStyle { 
-        font: default() , font_size: 14.0, color: Color::WHITE })
+        font: default() , font_size: 24.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
-                right: Val::Percent(45.0),
+                right: Val::Percent(43.5),
                 bottom: Val::Percent(5.0),
                 ..default()
             }),
@@ -60,7 +60,7 @@ fn setup(
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(77.5),
-                bottom: Val::Percent(78.5),
+                bottom: Val::Percent(77.5),
                 ..default()
             }),
         )).insert(TextField::Hour);
@@ -70,8 +70,8 @@ fn setup(
         font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
-                right: Val::Percent(21.5),
-                bottom: Val::Percent(78.5),
+                right: Val::Percent(20.5),
+                bottom: Val::Percent(77.5),
                 ..default()
             }),
         )).insert(TextField::Minute);
@@ -82,7 +82,7 @@ fn setup(
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 right: Val::Percent(77.5),
-                bottom: Val::Percent(21.5),
+                bottom: Val::Percent(20.5),
                 ..default()
             }),
         )).insert(TextField::Second);
@@ -92,8 +92,8 @@ fn setup(
         font: default() , font_size: 22.0, color: Color::WHITE })
             .with_style(Style {
                 position_type: PositionType::Absolute,
-                right: Val::Percent(21.5),
-                bottom: Val::Percent(21.5),
+                right: Val::Percent(20.5),
+                bottom: Val::Percent(20.5),
                 ..default()
             }),
         )).insert(TextField::TwelveHour);
